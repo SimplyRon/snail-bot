@@ -1,0 +1,6 @@
+{
+    "modLogChannel": "channel-id",
+    "publicLogChannel": "channel-id",
+    "trustedMembers": ["admin-member-id"],
+    "prefix": "??"
+}
