@@ -4,6 +4,8 @@
 
 Download dependencies: `npm install pkg.json`
 
+Setup data files (see below)
+
 Run bot: `npm start`
 
 ## Config.json
