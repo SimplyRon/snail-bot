@@ -1,5 +1,11 @@
 # AS-Bot
 
+## Setup & running
+
+Download dependencies: `npm install pkg.json`
+
+Run bot: `npm start`
+
 ## Config.json
 
 ```json
