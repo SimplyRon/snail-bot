@@ -4,8 +4,7 @@ const { prefix, trustedMembers } = require("./data/config.json");
 const events = require("./src/events.js");
 const fs = require("fs");
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
-let serverRoles = [];
-let ourGuild = [];
+let ourGuild = undefined;
 let ourRoles = {};
 
 //Discord Setup
@@ -32,8 +31,7 @@ function fetchOurRoles() {
     // Since this is a proprietary bot, we only have one guild, so we can get away with this
 
     const ourGuildId = client.guilds.cache.map(guild => guild.id)[0];
-    // console.log(ourGuild);
-
+    
     ourGuild = client.guilds.cache.get(ourGuildId);
 
     let ourRolesUnsorted = [];
@@ -54,33 +52,16 @@ function fetchOurRoles() {
         })
     }).catch(console.error);
 
-    // console.log(ourRolesUnsorted)
 }
-
-    function reverseObject(object) {
-        var newObject = {};
-        var keys = [];
-
-        for (var key in object) {
-            keys.push(key);
-        }
-
-        for (var i = keys.length - 1; i >= 0; i--) {
-          var value = object[keys[i]];
-          newObject[keys[i]]= value;
-        }       
-
-        return newObject;
-      }
 
 //Command Executor
 function runCommand(commandName, message, args, client) {
     //Get Command
     command = client.commands.get(commandName);
-    //Check for admin
-
-    const allowed = checkForPermissions(command.class,command.forbidden, message);
     
+    //Check for permission
+    const allowed = checkForPermissions(command.class,command.forbidden, message);
+
     if (!allowed) {
         return message.channel.send("**You are not permitted to use this command**");
     }
