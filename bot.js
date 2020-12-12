@@ -4,6 +4,8 @@ const { prefix, trustedMembers } = require("./data/config.json");
 const events = require("./src/events.js");
 const fs = require("fs");
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
+let serverRoles = [];
+let ourGuild = undefined;
 
 //Discord Setup
 const discord = require("discord.js");
@@ -21,6 +23,13 @@ for (const file of commandFiles) {
 client.on('ready', () => {
     console.log(`Succesfully logged in as ${client.user.tag}`);
     client.user.setActivity("AS-Bot V1.0");
+
+    // Since this is a proprietary bot, we only have one guild, so we can get away with this
+
+    ourGuild = client.guilds.cache.map(guild => guild.id)[0];
+    // console.log(ourGuild);
+
+    console.log(ourGuild.roles);
 });
 
 //Command Executor
