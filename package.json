@@ -1,0 +1,16 @@
+{
+  "name": "as-bot",
+  "version": "1.0.0",
+  "description": "a moderation and logging bot made for the shortcut discord server",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "author": "ElementalMP4",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.4.1",
+    "moment": "^2.29.1",
+    "mysql": "^2.18.1"
+  }
+}
