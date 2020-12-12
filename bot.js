@@ -60,23 +60,39 @@ function runCommand(commandName, message, args, client) {
     command = client.commands.get(commandName);
     
     //Check for permission
-    const allowed = checkForPermissions(command.class,command.forbidden, message);
+    const allowed = checkForPermissions(command.class,command.forbidden, message, command);
 
-    if (!allowed) {
+    if (!allowed && allowed != null) {
         return message.channel.send("**You are not permitted to use this command**");
     }
     //Check for Args
-    if (command.requiresArgs && !args.length) {
+    if (command.requiresArgs && !args.length && allowed != null) {
         return message.channel.send("**This command requires argument**\n`" + command.usage + "`");
     }
     //Execute command
     command.execute(message, args, client);
 };
 
-function checkForPermissions(requiredRole, forbidden, message) {
-    if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
-        return true;
+function checkForPermissions(requiredRole, forbidden, message, cmd) {
+    if (requiredRole && forbidden) {
+        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
+            return true;
+        }
+    } else {
+        const icon = message.guild.iconURL();
+        const serverEmbed = new discord.MessageEmbed()
+            .setColor("#FF0000")
+            .setThumbnail(icon)
+            .setTitle(`Snail Bot Exception`)
+            .setDescription(`Bad configuration for command ${capitalizeString(cmd.name)}`)
+        message.channel.send(serverEmbed);
+        return null
     }
+
+}
+
+function capitalizeString(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 //Member Joined
