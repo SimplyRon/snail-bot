@@ -3,7 +3,8 @@ module.exports = {
     name: 'ping',
     description: 'get the API/Client response time',
     usage: 'ping',
-    class: 'Public',
+    class: ['@everyone'],
+    forbidden: ['Guest Snail'],
     requiresArgs: false,
     execute(msg, args, client) {
         const color = "#fefefe"

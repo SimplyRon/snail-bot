@@ -5,7 +5,8 @@ const events = require("./src/events.js");
 const fs = require("fs");
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 let serverRoles = [];
-let ourGuild = undefined;
+let ourGuild = [];
+let ourRoles = {};
 
 //Discord Setup
 const discord = require("discord.js");
@@ -24,20 +25,63 @@ client.on('ready', () => {
     console.log(`Succesfully logged in as ${client.user.tag}`);
     client.user.setActivity("AS-Bot V1.0");
 
+    fetchOurRoles()
+});
+
+function fetchOurRoles() {
     // Since this is a proprietary bot, we only have one guild, so we can get away with this
 
-    ourGuild = client.guilds.cache.map(guild => guild.id)[0];
+    const ourGuildId = client.guilds.cache.map(guild => guild.id)[0];
     // console.log(ourGuild);
 
-    console.log(ourGuild.roles);
-});
+    ourGuild = client.guilds.cache.get(ourGuildId);
+
+    let ourRolesUnsorted = [];
+    ourGuild.roles.fetch()
+    .then(roles => {
+        roles.cache.forEach(element => {
+            ourRolesUnsorted.push(element);
+        });
+        console.log(`Populated our roles list with ${roles.cache.size} roles` )
+    }).then(() => {
+
+        ourRolesUnsorted.forEach(element => {
+            ourRoles[element.position] = {
+                id: element.id,
+                name: element.name,
+                position: element.rawPosition
+            }
+        })
+    }).catch(console.error);
+
+    // console.log(ourRolesUnsorted)
+}
+
+    function reverseObject(object) {
+        var newObject = {};
+        var keys = [];
+
+        for (var key in object) {
+            keys.push(key);
+        }
+
+        for (var i = keys.length - 1; i >= 0; i--) {
+          var value = object[keys[i]];
+          newObject[keys[i]]= value;
+        }       
+
+        return newObject;
+      }
 
 //Command Executor
 function runCommand(commandName, message, args, client) {
     //Get Command
     command = client.commands.get(commandName);
     //Check for admin
-    if (command.class == "Admin" && !trustedMembers.includes(message.author.id)) {
+
+    const allowed = checkForPermissions(command.class,command.forbidden, message);
+    
+    if (!allowed) {
         return message.channel.send("**You are not permitted to use this command**");
     }
     //Check for Args
@@ -47,6 +91,12 @@ function runCommand(commandName, message, args, client) {
     //Execute command
     command.execute(message, args, client);
 };
+
+function checkForPermissions(requiredRole, forbidden, message) {
+    if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
+        return true;
+    }
+}
 
 //Member Joined
 client.on('guildMemberAdd', function(member) { events.memberjoin(member, client) });
