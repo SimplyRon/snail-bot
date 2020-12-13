@@ -74,12 +74,11 @@ function runCommand(commandName, message, args, client) {
 };
 
 function checkForPermissions(requiredRole, forbidden, message, cmd) {
-    console.log(requiredRole, forbidden);
+    
     if (requiredRole && forbidden) {
         if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
             return true;
         } else {
-            // console.log("foo");
             return false;
         }
     } else {
