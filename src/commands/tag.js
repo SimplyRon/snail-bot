@@ -4,7 +4,7 @@ module.exports = {
     description: 'Grab a server rule from the rules channel',
     usage: 'tag [rule number]',
     class: ['Moderator', 'Administrator'],
-    // forbidden: [],
+    forbidden: [],
     requiresArgs: true,
     execute(msg, args, client) {
         var ruleNum = args[0];
