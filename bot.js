@@ -1,16 +1,16 @@
 //Misc Requirements
-const auth = require("./data/auth.json");
-const { prefix, trustedMembers } = require("./data/config.json");
-const events = require("./src/events.js");
-const fs = require("fs");
-const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
+import { BotToken } from "./data/auth.json";
+import { prefix } from "./data/config.json";
+import { memberjoin, memberleave, messagedeleted, messageupdated, messagebulkdelete } from "./src/events.js";
+import { readdirSync } from "fs";
+const commandFiles = readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 let ourGuild = undefined;
 let ourRoles = {};
 
 //Discord Setup
-const discord = require("discord.js");
-const client = new discord.Client();
-client.commands = new discord.Collection();
+import { Client, Collection, MessageEmbed } from "discord.js";
+const client = new Client();
+client.commands = new Collection();
 
 //Load Commands
 for (const file of commandFiles) {
@@ -83,7 +83,7 @@ function checkForPermissions(requiredRole, forbidden, message, cmd) {
         }
     } else {
         const icon = message.guild.iconURL();
-        const serverEmbed = new discord.MessageEmbed()
+        const serverEmbed = new MessageEmbed()
             .setColor("#FF0000")
             .setThumbnail(icon)
             .setTitle(`Snail Bot Exception`)
@@ -99,19 +99,19 @@ function capitalizeString(string) {
 }
 
 //Member Joined
-client.on('guildMemberAdd', function(member) { events.memberjoin(member, client) });
+client.on('guildMemberAdd', function(member) { memberjoin(member, client) });
 
 //Member Left
-client.on("guildMemberRemove", function(member) { events.memberleave(member, client) });
+client.on("guildMemberRemove", function(member) { memberleave(member, client) });
 
 //Message Deleted
-client.on('messageDelete', function(message) { events.messagedeleted(message, client) });
+client.on('messageDelete', function(message) { messagedeleted(message, client) });
 
 //Message Edited
-client.on('messageUpdate', function(omessage, nmessage) { try { events.messageupdated(omessage, nmessage, client) } catch {} });
+client.on('messageUpdate', function(omessage, nmessage) { try { messageupdated(omessage, nmessage, client) } catch {} });
 
 //Bulk Delete
-client.on('messageDeleteBulk', function(messageCollection) { events.messagebulkdelete(messageCollection, client) });
+client.on('messageDeleteBulk', function(messageCollection) { messagebulkdelete(messageCollection, client) });
 
 //Message Received
 client.on('message', async(message) => {
@@ -123,4 +123,4 @@ client.on('message', async(message) => {
 });
 
 //Log in to discord
-client.login(auth.BotToken);
+client.login(BotToken);
