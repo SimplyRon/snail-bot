@@ -1,4 +1,4 @@
-const { ruleMessageID, ruleChannelID } = require("../../data/config.json");
+const { ruleMessageId, ruleChannelId } = require("../../data/config.json");
 module.exports = {
     name: 'tag',
     description: 'Grab a server rule from the rules channel',

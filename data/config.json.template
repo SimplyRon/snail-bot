@@ -1,6 +1,9 @@
 {
-    "modLogChannel": "787141918055858176",
+    "modLogChannel": "787141763173318678",
     "publicLogChannel": "channel-id",
     "trustedMembers": ["admin-member-id"],
-    "prefix": "??"
+    "prefix": "??",
+    "ruleMessageId" : "559156498903728178",
+    "ruleChannelId" : "556172089795674140",
+    
 }
