@@ -74,8 +74,9 @@ function runCommand(commandName, message, args, client) {
 };
 
 function checkForPermissions(requiredRole, forbidden, message, cmd) {
+
     if (requiredRole && forbidden) {
-        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
+        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && (!message.member.roles.cache.find(r => forbidden.includes(r.name)) || forbidden.length != 0))  {
             return true;
         }
     } else {
