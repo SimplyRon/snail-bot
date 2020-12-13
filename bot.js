@@ -61,7 +61,7 @@ function runCommand(commandName, message, args, client) {
     
     //Check for permission
     const allowed = checkForPermissions(command.class,command.forbidden, message, command);
-
+    
     if (!allowed && allowed != null) {
         return message.channel.send("**You are not permitted to use this command**");
     }
@@ -74,10 +74,13 @@ function runCommand(commandName, message, args, client) {
 };
 
 function checkForPermissions(requiredRole, forbidden, message, cmd) {
-
+    console.log(requiredRole, forbidden);
     if (requiredRole && forbidden) {
-        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && (!message.member.roles.cache.find(r => forbidden.includes(r.name)) || forbidden.length != 0))  {
+        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
             return true;
+        } else {
+            // console.log("foo");
+            return false;
         }
     } else {
         const icon = message.guild.iconURL();
