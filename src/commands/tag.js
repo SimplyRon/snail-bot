@@ -8,8 +8,8 @@ module.exports = {
     requiresArgs: true,
     execute(msg, args, client) {
         var ruleNum = args[0];
-        channel = client.channels.cache.get(ruleChannelID)
-        channel.messages.fetch(ruleMessageID).then(message => {
+        channel = client.channels.cache.get(ruleChannelId)
+        channel.messages.fetch(ruleMessageId).then(message => {
             let singleRule = message.content.split("\n")[ruleNum];
             msg.channel.send(singleRule ? singleRule : "Invalid rule");
         });
