@@ -1,4 +1,6 @@
-import { ruleMessageId, ruleChannelId } from "../config/config.json";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_json_1 = require("../config/config.json");
 module.exports = {
     name: 'tag',
     description: 'Grab a server rule from the rules channel',
@@ -8,8 +10,8 @@ module.exports = {
     requiresArgs: true,
     execute(msg, args, client) {
         var ruleNum = args[0];
-        const channel = client.channels.cache.get(ruleChannelId);
-        channel.messages.fetch(ruleMessageId).then(message => {
+        const channel = client.channels.cache.get(config_json_1.ruleChannelId);
+        channel.messages.fetch(config_json_1.ruleMessageId).then(message => {
             let singleRule = message.content.split("\n")[ruleNum];
             msg.channel.send(singleRule ? singleRule : "Invalid rule");
         });

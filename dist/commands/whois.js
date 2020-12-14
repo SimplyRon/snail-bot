@@ -1,5 +1,7 @@
-import * as Discord from "discord.js";
-import * as moment from "moment";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Discord = require("discord.js");
+const moment = require("moment");
 module.exports = {
     name: 'whois',
     description: 'Get information about a user',

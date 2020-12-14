@@ -1,7 +1,10 @@
-import * as config from "./config/config.json";
-import * as Discord from "discord.js";
-import * as moment from "moment";
-export function memberJoin(member, client) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.messageBulkDelete = exports.messageUpdated = exports.messageDeleted = exports.memberLeave = exports.memberJoin = void 0;
+const config = require("./config/config.json");
+const Discord = require("discord.js");
+const moment = require("moment");
+function memberJoin(member, client) {
     const embed = new Discord.MessageEmbed()
         .setColor("#00ff00")
         .setTitle("New Member Joined")
@@ -9,7 +12,8 @@ export function memberJoin(member, client) {
         .setThumbnail(member.user.avatarURL());
     client.channels.cache.get(config.publicLogChannel).send(embed);
 }
-export function memberLeave(member, client) {
+exports.memberJoin = memberJoin;
+function memberLeave(member, client) {
     const embed = new Discord.MessageEmbed()
         .setColor("#ff0000")
         .setTitle("Member Left")
@@ -17,7 +21,8 @@ export function memberLeave(member, client) {
         .setThumbnail(member.user.avatarURL());
     client.channels.cache.get(config.publicLogChannel).send(embed);
 }
-export function messageDeleted(message, client) {
+exports.memberLeave = memberLeave;
+function messageDeleted(message, client) {
     const attachments = message.attachments.map(attachment => attachment.name + ":\n" + attachment.url + "\n");
     if (attachments.length) {
         const embed = new Discord.MessageEmbed()
@@ -39,7 +44,8 @@ export function messageDeleted(message, client) {
         client.channels.cache.get(config.modLogChannel).send(embed);
     }
 }
-export function messageUpdated(omessage, nmessage, client) {
+exports.messageDeleted = messageDeleted;
+function messageUpdated(omessage, nmessage, client) {
     const embed = new Discord.MessageEmbed()
         .setColor("#ffff00")
         .setTitle("Message Edited")
@@ -49,7 +55,8 @@ export function messageUpdated(omessage, nmessage, client) {
         .setThumbnail(omessage.member.user.avatarURL());
     client.channels.cache.get(config.modLogChannel).send(embed);
 }
-export function messageBulkDelete(messageCollection, client) {
+exports.messageUpdated = messageUpdated;
+function messageBulkDelete(messageCollection, client) {
     let humanLog = `**Deleted Messages from #${messageCollection.first().channel.name} (${messageCollection.first().channel.id})**`;
     for (const message of messageCollection.array().reverse()) {
         humanLog += `\r\n\r\n[${moment(message.createdAt).format()}] ${message.author.tag}`;
@@ -63,4 +70,5 @@ export function messageBulkDelete(messageCollection, client) {
     let attachment = new Discord.MessageAttachment(Buffer.from(humanLog, 'utf-8'), 'DeletedMessages.txt');
     client.channels.cache.get(config.modLogChannel).send("**Bulk Message Delete:**\n", attachment);
 }
+exports.messageBulkDelete = messageBulkDelete;
 //# sourceMappingURL=events.js.map

@@ -1,4 +1,6 @@
-import * as Discord from 'discord.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Discord = require("discord.js");
 module.exports = {
     name: 'serverinfo',
     description: 'Get information about the server',

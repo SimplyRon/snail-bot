@@ -1,7 +1,6 @@
 {
   "name": "as-bot",
   "version": "1.0.0",
-  "type": "module",
   "description": "a moderation and logging bot made for the shortcut discord server",
   "main": "dist/bot.js",
   "scripts": {

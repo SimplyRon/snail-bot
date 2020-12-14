@@ -1,14 +1,16 @@
-import { BotToken } from "./config/auth.json";
-import { prefix } from "./config/config.json";
-import { memberJoin, memberLeave, messageUpdated, messageDeleted, messageBulkDelete } from "./events";
-import { readdirSync } from "fs";
-import { Client, Collection, MessageEmbed } from "discord.js";
-const commandFiles = readdirSync('./src/commands').filter(file => file.endsWith('.js'));
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_json_1 = require("./config/auth.json");
+const config_json_1 = require("./config/config.json");
+const events_1 = require("./events");
+const fs_1 = require("fs");
+const discord_js_1 = require("discord.js");
+const commandFiles = fs_1.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 let ourGuild = undefined;
 let ourRoles = {};
 //Discord Setup
-const client = new Client();
-client.commands = new Collection();
+const client = new discord_js_1.Client();
+client.commands = new discord_js_1.Collection();
 //Load Commands
 for (const file of commandFiles) {
     const command = require(`./src/commands/${file}`);
@@ -69,7 +71,7 @@ function checkForPermissions(requiredRole, forbidden, message, cmd) {
     }
     else {
         const icon = message.guild.iconURL();
-        const serverEmbed = new MessageEmbed()
+        const serverEmbed = new discord_js_1.MessageEmbed()
             .setColor("#FF0000")
             .setThumbnail(icon)
             .setTitle(`Snail Bot Exception`)
@@ -82,26 +84,26 @@ function capitalizeString(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 //Member Joined
-client.on('guildMemberAdd', function (member) { memberJoin(member, client); });
+client.on('guildMemberAdd', function (member) { events_1.memberJoin(member, client); });
 //Member Left
-client.on("guildMemberRemove", function (member) { memberLeave(member, client); });
+client.on("guildMemberRemove", function (member) { events_1.memberLeave(member, client); });
 //Message Deleted
-client.on('messageDelete', function (message) { messageDeleted(message, client); });
+client.on('messageDelete', function (message) { events_1.messageDeleted(message, client); });
 //Message Edited
 client.on('messageUpdate', function (omessage, nmessage) { try {
-    messageUpdated(omessage, nmessage, client);
+    events_1.messageUpdated(omessage, nmessage, client);
 }
 catch { } });
 //Bulk Delete
-client.on('messageDeleteBulk', function (messageCollection) { messageBulkDelete(messageCollection, client); });
+client.on('messageDeleteBulk', function (messageCollection) { events_1.messageBulkDelete(messageCollection, client); });
 //Message Received
 client.on('message', async (message) => {
-    if (message.content.startsWith(prefix) && !message.author.bot) {
-        const args = message.content.slice(prefix.length).trim().split(/ +/g);
+    if (message.content.startsWith(config_json_1.prefix) && !message.author.bot) {
+        const args = message.content.slice(config_json_1.prefix.length).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
         runCommand(command, message, args, client);
     }
 });
 //Log in to discord
-client.login(BotToken);
+client.login(auth_json_1.BotToken);
 //# sourceMappingURL=bot.js.map
