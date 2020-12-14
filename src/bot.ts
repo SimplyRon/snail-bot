@@ -1,14 +1,13 @@
 import { BotToken } from "./config/auth.json";
 import { prefix } from "./config/config.json";
 import { memberJoin, memberLeave, messageUpdated, messageDeleted, messageBulkDelete } from "./events";
-import { readdirSync } from "fs";
 import { Client, Collection, MessageEmbed } from "discord.js";
+import { commands } from "./command-index";
 
 interface DiscordClient extends Client {
     commands?: Collection<string, any>;
 }
 
-const commandFiles = readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 let ourGuild = undefined;
 let ourRoles = {};
 
@@ -18,8 +17,7 @@ const client: DiscordClient = new Client();
 client.commands = new Collection<string, any>();
 
 //Load Commands
-for (const file of commandFiles) {
-    const command = require(`./src/commands/${file}`);
+for (const command of commands) {
     client.commands.set(command.name, command);
     console.log("Loaded command: " + command.name);
 }
