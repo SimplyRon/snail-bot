@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+import * as Discord from 'discord.js';
 module.exports = {
     name: 'serverinfo',
     description: 'Get information about the server',
@@ -6,7 +6,7 @@ module.exports = {
     class: 'Public',
     requiresArgs: false,
     execute(msg, args, client) {
-        const color = "#fefefe"
+        const color = "#fefefe";
         var id = msg.guild.id;
         var name = msg.guild.name;
         var createdAt = msg.guild.createdAt;
@@ -15,7 +15,7 @@ module.exports = {
         var ownerTag = msg.guild.owner.user.tag;
         var filtration = msg.guild.explicitContentFilter;
         var icon = msg.guild.iconURL();
-        var total = msg.guild.members.cache.size
+        var total = msg.guild.members.cache.size;
         var bots = msg.guild.members.cache.filter(member => member.user.bot).size;
         var users = msg.guild.members.cache.filter(member => !member.user.bot).size;
         var verifLevel = msg.guild.verificationLevel;
@@ -23,7 +23,8 @@ module.exports = {
             .setColor(color)
             .setThumbnail(icon)
             .setTitle(name + " Information")
-            .setDescription("**👑 Owner ID: **" + owner + "**\n🏷 Owner Tag: **" + ownerTag + "\n🆔 ID: **" + id + "**\n📅 Created at: **" + createdAt + "**\n🌍 Region: **" + region + "**\n⛔ Content Filtration Type: **" + filtration + "**\n🔐 User Verification Level: **" + verifLevel + "**\n🚻 Member Count: **" + total + "**\n🤖 Bot Count: **" + bots + "**\n🕹 User Count: **" + users + "**")
+            .setDescription("**👑 Owner ID: **" + owner + "**\n🏷 Owner Tag: **" + ownerTag + "\n🆔 ID: **" + id + "**\n📅 Created at: **" + createdAt + "**\n🌍 Region: **" + region + "**\n⛔ Content Filtration Type: **" + filtration + "**\n🔐 User Verification Level: **" + verifLevel + "**\n🚻 Member Count: **" + total + "**\n🤖 Bot Count: **" + bots + "**\n🕹 User Count: **" + users + "**");
         msg.channel.send(serverEmbed);
     },
 };
+//# sourceMappingURL=serverinfo.js.map

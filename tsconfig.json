@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "outDir": "dist",
+      "rootDir": "src",
+      "allowJs": true,
+      "target": "ES2019",
+      "lib": [ "ES2019" ],
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "noEmitOnError": true,
+      "sourceMap": true
+    },
+    "include": ["./src/**/*"]
+}

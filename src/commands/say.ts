@@ -1,4 +1,3 @@
-const discord = require("discord.js");
 module.exports = {
     name: 'say',
     description: 'Say a message',
@@ -8,7 +7,7 @@ module.exports = {
     deleteAfter: true,
     deleteAfterTime: 5000,
     requiresArgs: true,
-    execute(msg, args, client) {
+    execute(msg, args) {
         let strToSend = ""
         args.forEach(element => {
             strToSend += ` ${element}`;
