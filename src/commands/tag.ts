@@ -1,4 +1,4 @@
-import { Command } from "../Command";
+import { Command } from "../command";
 import { ruleMessageId, ruleChannelId } from "../config/config.json";
 
 const command: Command = {

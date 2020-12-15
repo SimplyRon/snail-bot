@@ -1,6 +1,6 @@
 import * as config from "./config/config.json";
 import * as moment from "moment";
-import { DiscordClient } from "./Command";
+import { DiscordClient } from "./command";
 import { Collection, DMChannel, GuildMember, Message, MessageAttachment, MessageEmbed, PartialGuildMember, PartialMessage } from "discord.js";
 
 export function memberJoin(member: GuildMember | PartialGuildMember, client: DiscordClient) {

@@ -3,7 +3,7 @@ import { prefix } from "./config/config.json";
 import { memberJoin, memberLeave, messageUpdated, messageDeleted, messageBulkDelete } from "./events";
 import { Client, Guild, Message, Role } from "discord.js";
 import { commandModules } from "./command-index";
-import { Command, DiscordClient } from "./Command";
+import { Command, DiscordClient } from "./command";
 
 let ourGuild: Guild;
 const ourRoles = {};

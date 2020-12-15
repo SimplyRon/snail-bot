@@ -1,4 +1,4 @@
-import { Command } from "./Command";
+import { Command } from "./command";
 
 interface CommandModule extends NodeRequire {
     command?: Command;

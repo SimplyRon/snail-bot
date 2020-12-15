@@ -1,6 +1,6 @@
 import { MessageEmbed, User } from "discord.js";
 import moment = require("moment");
-import { Command } from "../Command";
+import { Command } from "../command";
 
 const command: Command = {
     name: 'whois',

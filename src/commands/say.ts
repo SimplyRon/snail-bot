@@ -1,4 +1,4 @@
-import { Command } from "../Command";
+import { Command } from "../command";
 
 const command: Command = {
     name: 'say',

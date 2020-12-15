@@ -1,5 +1,5 @@
 import { MessageEmbed } from 'discord.js';
-import { Command } from '../Command';
+import { Command } from '../command';
 
 const command: Command = {
     name: 'ping',
