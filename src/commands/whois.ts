@@ -1,17 +1,19 @@
-import * as Discord from "discord.js";
-import * as moment from "moment";
-module.exports = {
+import { MessageEmbed, User } from "discord.js";
+import moment = require("moment");
+import { Command } from "../Command";
+
+const command: Command = {
     name: 'whois',
     description: 'Get information about a user',
     usage: 'whois [@user]',
-    class: 'Public',
+    requiredRoles: [ 'Public' ],
     requiresArgs: false,
-    execute(msg, args, client) {
+    execute(msg, args) {
         const color = "#fefefe"
-        if (msg.channel.type == "dm") {
+        if (msg.channel.type === "dm") {
             return msg.channel.send("This is a guild-only command");
         }
-        let user;
+        let user: User;
         if (!args[0]) {
             user = msg.author;
         } else {
@@ -22,7 +24,7 @@ module.exports = {
         if (!roles) {
             roles = "No roles";
         }
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setColor(color)
             .setThumbnail(user.avatarURL())
             .addField(`${user.tag}`, `${user}`, true)
@@ -35,3 +37,5 @@ module.exports = {
         msg.channel.send(embed)
     },
 };
+
+export { command };

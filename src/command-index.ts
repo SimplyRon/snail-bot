@@ -1,5 +1,10 @@
+import { Command } from "./Command";
 
-const commands: any[] = [
+interface CommandModule extends NodeRequire {
+    command?: Command;
+}
+
+const commandModules: CommandModule[] = [
     require(`./commands/ping`),
     require(`./commands/say`),
     require(`./commands/serverinfo`),
@@ -7,4 +12,4 @@ const commands: any[] = [
     require(`./commands/whois`)
 ];
 
-export { commands };
+export { commandModules };

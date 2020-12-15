@@ -1,17 +1,20 @@
-module.exports = {
+import { Command } from "../Command";
+
+const command: Command = {
     name: 'say',
     description: 'Say a message',
     usage: 'ping',
-    class: ['Trusted', "Moderator"],
-    forbidden: [],
+    requiredRoles: ['Trusted', "Moderator"],
     deleteAfter: true,
     deleteAfterTime: 5000,
     requiresArgs: true,
     execute(msg, args) {
         let strToSend = ""
-        args.forEach(element => {
+        args.forEach((element: any) => {
             strToSend += ` ${element}`;
         });
         msg.channel.send(strToSend);
     },
 };
+
+export { command };

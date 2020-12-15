@@ -1,42 +1,60 @@
 import { BotToken } from "./config/auth.json";
 import { prefix } from "./config/config.json";
 import { memberJoin, memberLeave, messageUpdated, messageDeleted, messageBulkDelete } from "./events";
-import { Client, Collection, MessageEmbed } from "discord.js";
-import { commands } from "./command-index";
+import { Client, Guild, Message, Role } from "discord.js";
+import { commandModules } from "./command-index";
+import { Command, DiscordClient } from "./Command";
 
-interface DiscordClient extends Client {
-    commands?: Collection<string, any>;
-}
-
-let ourGuild = undefined;
-let ourRoles = {};
+let ourGuild: Guild;
+const ourRoles = {};
 
 //Discord Setup
 
 const client: DiscordClient = new Client();
-client.commands = new Collection<string, any>();
+client.commands = new Map<string, Command>();
 
 //Load Commands
-for (const command of commands) {
+for (const module of commandModules) {
+
+    if (!module.command) {
+        console.log(`Could not load command from module: ${module.name}`);
+        console.log("Make sure the command is specified properly (interface: Command)");
+        continue;
+    }
+
+    const command = module.command;
+    const invalidRoles = getInvalidRoles(command);
+    if (invalidRoles.length > 0) {
+        console.log(`Bad permission configuration for command: ${command.name}`);
+        console.log(`Invalid roles: ${invalidRoles}`);
+        continue;
+    }
+
+    if (client.commands.has(command.name)) {
+        console.log(`A command with name: ${command.name} already exists!`);
+        console.log(`Wanted to load: ${module.name}`);
+        continue;
+    }
+
     client.commands.set(command.name, command);
-    console.log("Loaded command: " + command.name);
+    console.log(`Loaded command: ${command.name}`);
 }
 
 client.on('ready', () => {
     console.log(`Succesfully logged in as ${client.user.tag}`);
     client.user.setActivity("AS-Bot V1.0");
 
-    fetchOurRoles()
+    fetchOurRoles();
 });
 
 function fetchOurRoles() {
     // Since this is a proprietary bot, we only have one guild, so we can get away with this
 
-    const ourGuildId = client.guilds.cache.map(guild => guild.id)[0];
+    const ourGuildId = client.guilds.cache[0].id;
     
     ourGuild = client.guilds.cache.get(ourGuildId);
 
-    let ourRolesUnsorted = [];
+    const ourRolesUnsorted: Role[] = [];
     ourGuild.roles.fetch()
     .then(roles => {
         roles.cache.forEach(element => {
@@ -44,7 +62,6 @@ function fetchOurRoles() {
         });
         console.log(`Populated our roles list with ${roles.cache.size} roles` )
     }).then(() => {
-
         ourRolesUnsorted.forEach(element => {
             ourRoles[element.position] = {
                 id: element.id,
@@ -57,70 +74,68 @@ function fetchOurRoles() {
 }
 
 //Command Executor
-function runCommand(commandName, message, args, client) {
-    //Get Command
+function runCommand(commandName: string, message: Message, args: string[], client: DiscordClient) {
+
     const command = client.commands.get(commandName);
     
-    //Check for permission
-    const allowed = checkForPermissions(command.class,command.forbidden, message, command);
+    const allowed = checkForPermissions(message, command);
     
-    if (!allowed && allowed != null) {
+    if (!allowed) {
         return message.channel.send("**You are not permitted to use this command**");
     }
-    //Check for Args
-    if (command.requiresArgs && !args.length && allowed != null) {
+    
+    if (command.requiresArgs && !args.length) {
         return message.channel.send("**This command requires argument**\n`" + command.usage + "`");
     }
-    //Execute command
+    
     command.execute(message, args, client);
 };
 
-function checkForPermissions(requiredRole, forbidden, message, cmd) {
-    
-    if (requiredRole && forbidden) {
-        if(message.member.roles.cache.find(r => requiredRole.includes(r.name)) && !message.member.roles.cache.find(r => forbidden.includes(r.name)))  {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        const icon = message.guild.iconURL();
-        const serverEmbed = new MessageEmbed()
-            .setColor("#FF0000")
-            .setThumbnail(icon)
-            .setTitle(`Snail Bot Exception`)
-            .setDescription(`Bad configuration for command ${capitalizeString(cmd.name)}`)
-        message.channel.send(serverEmbed);
-        return null
-    }
-
+function checkForPermissions(message: Message, cmd: Command) {
+    const inRequiredRoles = !cmd.requiredRoles || message.member.roles.cache.find(r => cmd.requiredRoles.includes(r.name));
+    const inForbiddenRoles = cmd.forbiddenRoles && message.member.roles.cache.find(r => cmd.forbiddenRoles.includes(r.name));
+    return inRequiredRoles && !inForbiddenRoles;
 }
 
-function capitalizeString(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+function getInvalidRoles(command: Command): string[] {
+    const invalidRoles: string[] = [];
+    if (command.forbiddenRoles && command.requiredRoles){
+        command.requiredRoles.forEach(rRole => {
+            if (command.forbiddenRoles.find(fRole => rRole === fRole)) {
+                invalidRoles.push(rRole);
+            }
+        });
+    }
+    return invalidRoles;
 }
 
 //Member Joined
-client.on('guildMemberAdd', function(member) { memberJoin(member, client) });
+client.on('guildMemberAdd', async (member) => { try { memberJoin(member, client); } catch { console.log('Error while receiving guildMemberAdd'); } });
 
 //Member Left
-client.on("guildMemberRemove", function(member) { memberLeave(member, client) });
+client.on("guildMemberRemove", async (member) => { try { memberLeave(member, client); } catch { console.log('Error while receiving guildMemberRemove'); } });
 
 //Message Deleted
-client.on('messageDelete', function(message) { messageDeleted(message, client) });
+client.on('messageDelete', async (message) => { try { messageDeleted(message, client); } catch { console.log('Error while receiving messageDelete'); } });
 
 //Message Edited
-client.on('messageUpdate', function(omessage, nmessage) { try { messageUpdated(omessage, nmessage, client) } catch {} });
+client.on('messageUpdate', async (omessage, nmessage) => { try { messageUpdated(omessage, nmessage, client); } catch { console.log('Error while receiving messageUpdate'); } });
 
 //Bulk Delete
-client.on('messageDeleteBulk', function(messageCollection) { messageBulkDelete(messageCollection, client) });
+client.on('messageDeleteBulk', async (messageCollection) => { try { messageBulkDelete(messageCollection, client); } catch { console.log('Error while receiving messageDeleteBulk'); } });
 
 //Message Received
-client.on('message', async(message) => {
-    if (message.content.startsWith(prefix) && !message.author.bot) {
-        const args = message.content.slice(prefix.length).trim().split(/ +/g);
-        const command = args.shift().toLowerCase()
-        runCommand(command, message, args, client);
+client.on('message', async (message) => {
+    try {
+        if (message.content.startsWith(prefix) && !message.author.bot) {
+            const args = message.content.slice(prefix.length).trim().split(/ +/g);
+            const command = args.shift().toLowerCase()
+            runCommand(command, message, args, client);
+        }
+    }
+    catch
+    {
+        console.log('Error while receiving message');
     }
 });
 

@@ -6,7 +6,9 @@
     "module": "CommonJs",
     "resolveJsonModule": true,
     "noEmitOnError": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true
   },
   "include": ["./src/**/*"]
 }

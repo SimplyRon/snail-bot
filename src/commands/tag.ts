@@ -1,17 +1,23 @@
+import { Command } from "../Command";
 import { ruleMessageId, ruleChannelId } from "../config/config.json";
-module.exports = {
+
+const command: Command = {
     name: 'tag',
     description: 'Grab a server rule from the rules channel',
     usage: 'tag [rule number]',
-    class: ['Moderator', 'Administrator'],
-    forbidden: [],
+    requiredRoles: ['Moderator', 'Administrator'],
     requiresArgs: true,
     execute(msg, args, client) {
         var ruleNum = args[0];
-        const channel = client.channels.cache.get(ruleChannelId)
-        channel.messages.fetch(ruleMessageId).then(message => {
-            let singleRule = message.content.split("\n")[ruleNum];
-            msg.channel.send(singleRule ? singleRule : "Invalid rule");
-        });
+        const channel = client.channels.cache.get(ruleChannelId);
+        if (channel.isText()){
+            channel.messages.fetch(ruleMessageId)
+            .then(message => {
+                let singleRule = message.content.split("\n")[ruleNum];
+                msg.channel.send(singleRule ? singleRule : "Invalid rule");
+            });
+        }
     },
 };
+
+export { command };
