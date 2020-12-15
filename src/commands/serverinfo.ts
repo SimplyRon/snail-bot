@@ -1,11 +1,13 @@
-const Discord = require("discord.js");
-module.exports = {
+import { MessageEmbed } from 'discord.js';
+import { Command } from '../command';
+
+const command: Command = {
     name: 'serverinfo',
     description: 'Get information about the server',
     usage: 'serverinfo',
-    class: 'Public',
+    requiredRoles: [ 'Public' ],
     requiresArgs: false,
-    execute(msg, args, client) {
+    execute(msg) {
         const color = "#fefefe"
         var id = msg.guild.id;
         var name = msg.guild.name;
@@ -19,7 +21,7 @@ module.exports = {
         var bots = msg.guild.members.cache.filter(member => member.user.bot).size;
         var users = msg.guild.members.cache.filter(member => !member.user.bot).size;
         var verifLevel = msg.guild.verificationLevel;
-        const serverEmbed = new Discord.MessageEmbed()
+        const serverEmbed = new MessageEmbed()
             .setColor(color)
             .setThumbnail(icon)
             .setTitle(name + " Information")
@@ -27,3 +29,5 @@ module.exports = {
         msg.channel.send(serverEmbed);
     },
 };
+
+export { command };
