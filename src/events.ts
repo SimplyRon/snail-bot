@@ -2,13 +2,14 @@ import * as config from "./config/config.json";
 import * as moment from "moment";
 import { DiscordClient } from "./command";
 import { Collection, DMChannel, GuildMember, Message, MessageAttachment, MessageEmbed, PartialGuildMember, PartialMessage } from "discord.js";
+import { console } from "./console-wrap";
 
 export function memberJoin(member: GuildMember | PartialGuildMember, client: DiscordClient) {
     const embed = new MessageEmbed()
         .setColor("#00ff00")
         .setTitle("New Member Joined")
         .setDescription("**" + member.user.tag + "** Joined the server")
-        .setThumbnail(member.user.avatarURL());
+        .setThumbnail(member.user.avatarURL() ?? "");
     
     const channel = client.channels.cache.get(config.publicLogChannel);
     if (!channel.isText()) return;
@@ -20,7 +21,7 @@ export function memberLeave(member: GuildMember | PartialGuildMember, client: Di
         .setColor("#ff0000")
         .setTitle("Member Left")
         .setDescription("**" + member.user.tag + "** Left the server")
-        .setThumbnail(member.user.avatarURL());
+        .setThumbnail(member.user.avatarURL() ?? "");
     
     const channel = client.channels.cache.get(config.publicLogChannel);
     if (!channel.isText()) return;
@@ -35,17 +36,17 @@ export function messageDeleted(message: Message | PartialMessage, client: Discor
         embed = new MessageEmbed()
             .setColor("#ff0000")
             .setTitle("Message Deleted")
-            .addField("Content:", message.content ? message.content : "No Message")
+            .addField("Content:", sanitizeString(message.content))
             .addField("Attachments:", attachments)
             .addField("Author:", message.author.tag)
-            .setThumbnail(message.member.user.avatarURL());
+            .setThumbnail(message.member.user.avatarURL() ?? "");
     } else {
         embed = new MessageEmbed()
             .setColor("#ff0000")
             .setTitle("Message Deleted")
-            .addField("Content:", message.content)
+            .addField("Content:", sanitizeString(message.content))
             .addField("Author:", message.author.tag)
-            .setThumbnail(message.member.user.avatarURL());
+            .setThumbnail(message.member.user.avatarURL() ?? "");
     }
 
     const channel = client.channels.cache.get(config.modLogChannel);
@@ -57,10 +58,10 @@ export function messageUpdated(omessage: Message | PartialMessage, nmessage: Mes
     const embed = new MessageEmbed()
         .setColor("#ffff00")
         .setTitle("Message Edited")
-        .addField("Original Content:", omessage.content)
-        .addField("New Content:", nmessage.content)
+        .addField("Original Content:", sanitizeString(omessage.content))
+        .addField("New Content:", sanitizeString(nmessage.content))
         .addField("Author:", omessage.member.user.tag)
-        .setThumbnail(omessage.member.user.avatarURL());
+        .setThumbnail(omessage.member.user.avatarURL() ?? "");
     
     const channel = client.channels.cache.get(config.modLogChannel);
     if (!channel.isText()) return;
@@ -88,4 +89,9 @@ export function messageBulkDelete(messageCollection: Collection<string, Message 
     const modChannel = client.channels.cache.get(config.modLogChannel);
     if (!modChannel.isText()) return;
     modChannel.send("**Bulk Message Delete:**\n", attachment);
+}
+
+function sanitizeString(str: string): string {
+    if (!str) return "No Message";
+    return str;
 }

@@ -3,8 +3,8 @@ import { Command } from "../command";
 const command: Command = {
     name: 'say',
     description: 'Say a message',
-    usage: 'ping',
-    requiredRoles: ['Trusted', "Moderator"],
+    usage: 'tag [message]',
+    requiredRoles: ['Trusted', 'Moderator'],
     deleteAfter: true,
     deleteAfterTime: 5000,
     requiresArgs: true,
