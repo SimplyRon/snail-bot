@@ -26,7 +26,7 @@ jobs:
     - run: npm ci
 
     - name: Setting up the dummy configs
-    - run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
+      run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
 
     - name: Run TypeScript compiler
       run: tsc --diagnostics
