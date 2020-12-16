@@ -24,7 +24,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - run: npm ci
+    - name: Install dependencies
+      run: |
+       npm ci
+       yarn install --frozen-lockfile
 
     - name: Set up dummy configs
       run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
