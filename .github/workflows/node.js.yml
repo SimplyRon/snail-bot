@@ -16,7 +16,8 @@ jobs:
         node-version: [14.x]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Check-out
+      uses: actions/checkout@v2
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
@@ -28,8 +29,8 @@ jobs:
     - name: Setting up the dummy configs
       run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v1.4
+    - name: ESLint
+      uses: iCrawl/action-eslint@v1
 
     - name: Run TypeScript compiler
       run: tsc --diagnostics
