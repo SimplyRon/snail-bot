@@ -30,7 +30,7 @@ jobs:
       run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
 
     - name: Lint
-      run: eslint . --ext .ts --format github
+      run: npm run lint
 
     - name: Compile
       run: tsc --diagnostics
