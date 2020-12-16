@@ -7,7 +7,7 @@
     "start_noinstall": "tsc && node dist/bot.js",
     "start_nobuild": "node install && node dist/bot.js",
     "start": "npm install && npm run lint && tsc && node dist/bot.js",
-    "lint": "eslint . --ext .ts --format github  || eslint . --ext .ts"
+    "lint": "eslint . --ext .ts"
   },
   "author": "ElementalMP4",
   "license": "ISC",
