@@ -28,5 +28,8 @@ jobs:
     - name: Setting up the dummy configs
       run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
 
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.4
+
     - name: Run TypeScript compiler
       run: tsc --diagnostics
