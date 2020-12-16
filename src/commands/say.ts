@@ -9,7 +9,7 @@ const command: Command = {
     deleteAfterTime: 5000,
     requiresArgs: true,
     execute(msg, args) {
-        let strToSend = ""
+        let strToSend: string = {}
         args.forEach((element: any) => {
             strToSend += ` ${element}`;
         });
