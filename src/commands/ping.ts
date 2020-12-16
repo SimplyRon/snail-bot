@@ -15,10 +15,10 @@ const command: Command = {
             .setTitle("Ping Statistics")
             .addField("API Ping", ping + "ms")
             .setColor(color);
-        var d = new Date();
+        let d = new Date();
         const start = d.getTime();
         msg.channel.send(original).then((sentMessage) => {
-            var d = new Date();
+            let d = new Date();
             const end = d.getTime();
             const res = end - start;
             const updated = new MessageEmbed()
