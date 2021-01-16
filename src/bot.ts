@@ -7,7 +7,7 @@ import { Command, DiscordClient } from "./command";
 import { console } from "./console-wrap";
 
 let ourGuild: Guild;
-const ourRoles = new Set<String>();
+const ourRoles = new Set<string>();
 
 //Discord Setup
 
@@ -107,7 +107,7 @@ function runCommand(commandName: string, message: Message, args: string[], clien
     console.info(`Command triggered: ${command.name}`);
 
     command.execute(message, args, client);
-};
+}
 
 function checkForPermissions(message: Message, cmd: Command) {
     const inRequiredRoles = !cmd.requiredRoles || message.member.roles.cache.find(r => cmd.requiredRoles.includes(r.name));

@@ -20,7 +20,7 @@ const command: Command = {
             user = msg.mentions.users.first();
         }
         const member = msg.guild.member(user);
-        var roles = member.roles.cache.map(r => r).slice(0, -1).join("");
+        let roles = member.roles.cache.map(r => r).slice(0, -1).join("");
         if (!roles) {
             roles = "No roles";
         }

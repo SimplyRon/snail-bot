@@ -8,7 +8,7 @@ const command: Command = {
     requiredRoles: ['Moderator', 'Administrator'],
     requiresArgs: true,
     execute(msg, args, client) {
-        var ruleNum = args[0];
+        let ruleNum = args[0];
         const channel = client.channels.cache.get(ruleChannelId);
         if (channel.isText()){
             channel.messages.fetch(ruleMessageId)

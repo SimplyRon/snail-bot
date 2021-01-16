@@ -9,18 +9,18 @@ const command: Command = {
     requiresArgs: false,
     execute(msg) {
         const color = "#fefefe"
-        var id = msg.guild.id;
-        var name = msg.guild.name;
-        var createdAt = msg.guild.createdAt;
-        var region = msg.guild.region;
-        var owner = msg.guild.owner;
-        var ownerTag = msg.guild.owner.user.tag;
-        var filtration = msg.guild.explicitContentFilter;
-        var icon = msg.guild.iconURL();
-        var total = msg.guild.members.cache.size
-        var bots = msg.guild.members.cache.filter(member => member.user.bot).size;
-        var users = msg.guild.members.cache.filter(member => !member.user.bot).size;
-        var verifLevel = msg.guild.verificationLevel;
+        let id = msg.guild.id;
+        let name = msg.guild.name;
+        let createdAt = msg.guild.createdAt;
+        let region = msg.guild.region;
+        let owner = msg.guild.owner;
+        let ownerTag = msg.guild.owner.user.tag;
+        let filtration = msg.guild.explicitContentFilter;
+        let icon = msg.guild.iconURL();
+        let total = msg.guild.members.cache.size
+        let bots = msg.guild.members.cache.filter(member => member.user.bot).size;
+        let users = msg.guild.members.cache.filter(member => !member.user.bot).size;
+        let verifLevel = msg.guild.verificationLevel;
         const serverEmbed = new MessageEmbed()
             .setColor(color)
             .setThumbnail(icon)
