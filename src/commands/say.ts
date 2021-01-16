@@ -1,18 +1,20 @@
-const discord = require("discord.js");
-module.exports = {
+import { Command } from "../command";
+
+const command: Command = {
     name: 'say',
     description: 'Say a message',
-    usage: 'ping',
-    class: ['Trusted', "Moderator"],
-    forbidden: [],
+    usage: 'tag [message]',
+    requiredRoles: ['Trusted', 'Moderator'],
     deleteAfter: true,
     deleteAfterTime: 5000,
     requiresArgs: true,
-    execute(msg, args, client) {
+    execute(msg, args) {
         let strToSend = ""
-        args.forEach(element => {
+        args.forEach((element: any) => {
             strToSend += ` ${element}`;
         });
         msg.channel.send(strToSend);
     },
 };
+
+export { command };

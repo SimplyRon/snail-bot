@@ -2,15 +2,27 @@
   "name": "as-bot",
   "version": "1.0.0",
   "description": "a moderation and logging bot made for the shortcut discord server",
-  "main": "bot.js",
+  "main": "dist/bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start_noinstall": "tsc && node .",
+    "start_nobuild": "node install && node .",
+    "start": "npm install && npm run lint && tsc && node .",
+    "lint": "eslint . --ext .ts"
   },
   "author": "ElementalMP4",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.4.1",
+    "colors": "^1.4.0",
+    "discord.js": "^12.5.1",
     "moment": "^2.29.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "typescript": "^4.1.3"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.13",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "eslint": "^7.15.0",
+    "eslint-formatter-github": "^1.0.11"
   }
 }
