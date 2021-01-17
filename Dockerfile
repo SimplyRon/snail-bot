@@ -16,11 +16,18 @@ RUN mv ./src/config/auth.template.json src/config/auth.json && \
 
 RUN tsc
 
-FROM scratch
-WORKDIR usr/app
+FROM node:14-alpine AS build2
+WORKDIR usr/snail-bot
 COPY package.json ./
 
 RUN npm install --production
 
 COPY --from=build usr/snail-bot/dist ./dist
+
+FROM scratch
+WORKDIR usr/snail-bot
+COPY package.json ./
+
+COPY --from=build2 usr/snail-bot ./
+
 CMD ["node", "."]
