@@ -1,14 +1,22 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../command';
+import { Message, MessageEmbed } from 'discord.js';
+import { Command } from '../interfaces/Command';
 
-const command: Command = {
-    name: 'serverinfo',
-    description: 'Get information about the server',
-    usage: 'serverinfo',
-    requiredRoles: [ 'Public' ],
-    requiresArgs: false,
-    execute(msg) {
-        const color = "#fefefe"
+export class ServerInfoCommand implements Command {
+
+    public name = 'serverinfo';
+
+    public description = 'Get information about the server';
+
+    public usage = 'serverinfo';
+
+    public requiredRoles = [ 'Public' ];
+
+    public forbiddenRoles = [];
+
+    public requiresArgs = false;
+
+    public async execute(msg: Message) {
+        const color = "#fefefe";
         let id = msg.guild.id;
         let name = msg.guild.name;
         let createdAt = msg.guild.createdAt;
@@ -27,7 +35,5 @@ const command: Command = {
             .setTitle(name + " Information")
             .setDescription("**👑 Owner ID: **" + owner + "**\n🏷 Owner Tag: **" + ownerTag + "\n🆔 ID: **" + id + "**\n📅 Created at: **" + createdAt + "**\n🌍 Region: **" + region + "**\n⛔ Content Filtration Type: **" + filtration + "**\n🔐 User Verification Level: **" + verifLevel + "**\n🚻 Member Count: **" + total + "**\n🤖 Bot Count: **" + bots + "**\n🕹 User Count: **" + users + "**")
         msg.channel.send(serverEmbed);
-    },
-};
-
-export { command };
+    }
+}
