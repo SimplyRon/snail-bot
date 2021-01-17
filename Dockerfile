@@ -3,26 +3,19 @@ FROM node:14-alpine AS build
 ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apk update && \
-    apk add --no-cache git
-
-RUN git clone https://github.com/SimplyRon/snail-bot.git
-
-WORKDIR /snail-bot
+WORKDIR usr/snail-bot
 
 RUN mv src/config/auth.template.json src/config/auth.json && \
     mv src/config/config.template.json src/config/config.json 
 
 RUN sed -i "s/{{DISCORD_TOKEN}}/$Token/" src/config/auth.json
 
-RUN npm install && \
-    npm install tsc -g && \
-    npm run tsc
-
-
-
+COPY package.json .
+RUN npm install
+COPY . .
+RUN tsc
 
 FROM node:14-alpine
-COPY --from=build /snail-bot /snail-bot
-ENTRYPOINT ["/snail-bot"]
+COPY --from=build usr/snail-bot usr/snail-bot
+ENTRYPOINT ["usr/snail-bot"]
 CMD ["node", "."]
