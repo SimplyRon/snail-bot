@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM node:14
 
 ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
@@ -8,8 +8,6 @@ RUN apt-get update && apt-get install -y \
     curl wget \
     vim 
 
-RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
-RUN apt-get install -y nodejs
 RUN git clone https://github.com/SimplyRon/snail-bot.git
 
 WORKDIR /snail-bot
