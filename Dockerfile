@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:14-alpine
 
 ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
