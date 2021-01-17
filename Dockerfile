@@ -1,6 +1,6 @@
 FROM ubuntu
 
-
+ARG Token=wrong
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
@@ -17,7 +17,7 @@ WORKDIR /snail-bot
 COPY src/config/auth.template.json src/config/auth.json 
 COPY src/config/config.template.json src/config/config.json 
 
-RUN sed -i 's/{{DISCORD_TOKEN}}/${Token}/' src/config/auth.json
+RUN sed -i 's/{{DISCORD_TOKEN}}/$Token/' src/config/auth.json
 
 RUN cat src/config/auth.json
 RUN echo ${Token}
