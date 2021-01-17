@@ -4,8 +4,7 @@ ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apk update && \
-    apk add --no-cache git && \
-    apk add --no-cache tsc
+    apk add --no-cache git
 
 RUN git clone https://github.com/SimplyRon/snail-bot.git
 
@@ -16,7 +15,7 @@ RUN mv src/config/auth.template.json src/config/auth.json && \
 
 RUN sed -i "s/{{DISCORD_TOKEN}}/$Token/" src/config/auth.json
 
-RUN npm install && tsc
+RUN npm install && npm run tsc
 
 
 
