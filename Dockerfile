@@ -1,5 +1,5 @@
 FROM ubuntu
-ARG DISCORD_TOKEN=${DISCORD_TOKEN}
+
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,6 +17,7 @@ WORKDIR /snail-bot
 COPY src/config/auth.template.json src/config/auth.json 
 COPY src/config/config.template.json src/config/config.json 
 
-RUN sed -i 's/{{DISCORD_TOKEN}}/Nzg3MTM3NDc5OTE1ODY0MDg0.X9Qk5w.cy81ELuomXiLK0pbJBhvjlwx-kc/' src/config/auth.json
+RUN sed -i 's/{{DISCORD_TOKEN}}/${Token}/' src/config/auth.json
 
 RUN cat src/config/auth.json
+RUN echo ${Token}
