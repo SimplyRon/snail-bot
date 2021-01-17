@@ -36,4 +36,4 @@ jobs:
             Token=${{ secrets.BOT_TOKEN }}
 
       - name: Image size and digest
-        run: docker images --digests
+        run: docker registry ls --digests
