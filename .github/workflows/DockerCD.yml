@@ -35,8 +35,5 @@ jobs:
           build-args: |
             Token=${{ secrets.BOT_TOKEN }}
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
-      - name: Image size
-        run: ls -l --block-size=M /var/lib/docker/aufs/diff
+      - name: Image size and digest
+        run: docker images --digests
