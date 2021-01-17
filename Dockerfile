@@ -4,7 +4,8 @@ ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apk update && \
-    apk add --no-cache git
+    apk add --no-cache git && \
+    apk add --no-cache tsc
 
 RUN git clone https://github.com/SimplyRon/snail-bot.git
 
