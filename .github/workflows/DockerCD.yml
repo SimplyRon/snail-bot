@@ -33,9 +33,7 @@ jobs:
           tags: justapassenger/snail-bot:latest
           build-args: |
             Token=${{ secrets.BOT_TOKEN }}
-          outputs: |
-            type=local,dest=./docker
-            type=registry
+          outputs: type=local,dest=./docker
 
       - name: Image size and digest
         run: ls -l --block-size=M /tmp/docker-build-push-*
