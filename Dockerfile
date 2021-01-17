@@ -24,7 +24,7 @@ RUN npm install --production
 
 COPY --from=build usr/snail-bot/dist ./dist
 
-FROM scratch
+FROM node:14-slim
 WORKDIR usr/snail-bot
 COPY package.json ./
 
