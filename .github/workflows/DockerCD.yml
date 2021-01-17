@@ -29,8 +29,9 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2.2.2
         with:
+          context: .
           push: true
-          tags: user/app:latest
+          tags: justapassenger/snail-bot:latest
           build-args: |
             Token=${{ secrets.BOT_TOKEN }}
 
