@@ -16,7 +16,7 @@ RUN mv src/config/auth.template.json src/config/auth.json && \
 RUN sed -i "s/{{DISCORD_TOKEN}}/$Token/" src/config/auth.json
 
 RUN npm install && \
-    npm install typescript -g && \
+    npm install tsc -g && \
     npm run tsc
 
 
