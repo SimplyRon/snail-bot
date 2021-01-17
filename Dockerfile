@@ -3,7 +3,8 @@ FROM node:alpine
 ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y git
+RUN apk update && \
+    apk add --no-cache git
 
 RUN git clone https://github.com/SimplyRon/snail-bot.git
 
