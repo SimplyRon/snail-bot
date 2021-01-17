@@ -39,4 +39,4 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Image size
-        run: ls -l --block-size=M
+        run: ls -l --block-size=M /var/lib/docker/aufs/diff
