@@ -2,7 +2,7 @@
   "name": "as-bot",
   "version": "1.0.0",
   "description": "a moderation and logging bot made for the shortcut discord server",
-  "main": "dist/bot.js",
+  "main": "dist/index.js",
   "scripts": {
     "start_noinstall": "tsc && node .",
     "start_nobuild": "node install && node .",

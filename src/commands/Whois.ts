@@ -1,14 +1,22 @@
-import { MessageEmbed, User } from "discord.js";
+import { MessageEmbed, User, Message } from "discord.js";
 import moment = require("moment");
-import { Command } from "../command";
+import { Command } from "../interfaces/Command";
 
-const command: Command = {
-    name: 'whois',
-    description: 'Get information about a user',
-    usage: 'whois [@user]',
-    requiredRoles: [ 'Public' ],
-    requiresArgs: false,
-    execute(msg, args) {
+export class WhoisCommand implements Command {
+
+    public name = 'whois';
+
+    public description = 'Get information about a user';
+
+    public usage = 'whois [@user]';
+
+    public requiredRoles = [ 'Public' ];
+
+    public forbiddenRoles = [];
+
+    public requiresArgs = false;
+
+    public async execute(msg: Message, args: string[]) {
         const color = "#fefefe"
         if (msg.channel.type === "dm") {
             return msg.channel.send("This is a guild-only command");
@@ -35,7 +43,5 @@ const command: Command = {
             .addField("📋 Roles:", roles, false)
             .addField("🆔 ID:", `${user.id}`, false)
         msg.channel.send(embed)
-    },
-};
-
-export { command };
+    }
+}
