@@ -39,4 +39,4 @@ jobs:
         run: ls -l --block-size=M /tmp/docker-build-push-*
 
       - name: Folder size
-        run: ls -l --block-size=M ./docker
+        run: du -ach ./docker
