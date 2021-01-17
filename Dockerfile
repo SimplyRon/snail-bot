@@ -24,10 +24,10 @@ RUN npm install --production
 
 COPY --from=build usr/snail-bot/dist ./dist
 
-FROM scratch
+FROM node:14-alpine
 WORKDIR /usr/snail-bot
 COPY package.json ./
 
-COPY --from=build2 usr/snail-bot ./
+COPY --from=build2 /usr/snail-bot ./
 
 CMD ["node", "."]
