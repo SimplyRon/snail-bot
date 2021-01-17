@@ -1,8 +1,2 @@
 #!/bin/bash
-#
-# Pre build hook for Docker Automated Build.
-#
-# 
-#
-
-docker build --build-arg DISCORD_TOKEN=$Token -f Dockerfile -t justapassenger/snail-bot:latest .
+docker build --build-arg DISCORD_TOKEN=$Token -f $DOCKERFILE_PATH -t $IMAGE_NAME .
