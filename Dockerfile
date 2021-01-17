@@ -3,11 +3,6 @@ FROM node:14
 ARG Token=${Token}
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
-    git \
-    curl wget \
-    vim 
-
 RUN git clone https://github.com/SimplyRon/snail-bot.git
 
 WORKDIR /snail-bot
