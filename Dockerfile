@@ -1,5 +1,5 @@
 FROM ubuntu
-
+ARG DISCORD_TOKEN=${DISCORD_TOKEN}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
