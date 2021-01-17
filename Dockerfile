@@ -7,7 +7,6 @@ WORKDIR usr/snail-bot
 
 COPY package.json .
 RUN npm install -g typescript
-RUN npm install -g tsc
 RUN npm install
 COPY . .
 
