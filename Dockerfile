@@ -1,6 +1,7 @@
-FROM node:alpine
+FROM alpine:3.12
 
 ARG Token=${Token}
+ENV NODE_VERSION 14.15.4
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y git
