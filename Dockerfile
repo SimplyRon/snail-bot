@@ -17,7 +17,6 @@ RUN sed -i "s/{{DISCORD_TOKEN}}/$Token/" src/config/auth.json
 
 RUN npm set progress=false && \
     npm config set depth 0 && \
-    npm install --only=production && \
     npm cache clean
 
 CMD ["npm", "production"]
