@@ -7,7 +7,7 @@
     "start_noinstall": "tsc && node .",
     "start_nobuild": "node install && node .",
     "start": "npm install && npm run lint && tsc && node .",
-    "production": "npm ci && tsc && node.",
+    "production": "npm install && tsc && node.",
     "lint": "eslint . --ext .ts"
   },
   "author": "ElementalMP4",
