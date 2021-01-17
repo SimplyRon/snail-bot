@@ -16,7 +16,7 @@ RUN mv ./src/config/auth.template.json src/config/auth.json && \
 
 RUN tsc
 
-FROM node:14-alpine
+FROM scratch
 WORKDIR usr/app
 COPY package.json ./
 
