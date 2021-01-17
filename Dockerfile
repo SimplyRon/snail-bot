@@ -1,8 +1,7 @@
 FROM ubuntu
-
+ARG DISCORD_TOKEN=${DISCORD_TOKEN}
 
 ENV DEBIAN_FRONTEND=noninteractive
-ARG Token
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -18,8 +17,6 @@ WORKDIR /snail-bot
 COPY src/config/auth.template.json src/config/auth.json 
 COPY src/config/config.template.json src/config/config.json 
 
-RUN sed -i 's/{{DISCORD_TOKEN}}/${Token}/' /snail-bot/src/config/auth.json
+RUN sed -i 's/{{DISCORD_TOKEN}}/Nzg3MTM3NDc5OTE1ODY0MDg0.X9Qk5w.cy81ELuomXiLK0pbJBhvjlwx-kc/' src/config/auth.json
 
-
-RUN npm install 
-CMD ["npm", "start"]
+RUN cat src/config/auth.json
