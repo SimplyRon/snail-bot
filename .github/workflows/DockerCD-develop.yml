@@ -1,8 +1,8 @@
-name: Docker CD
+name: Docker CD - Develop
 
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
 
   workflow_dispatch:
 
@@ -31,7 +31,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: justapassenger/snail-bot:latest
+          tags: justapassenger/snail-bot:develop
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
