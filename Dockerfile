@@ -14,7 +14,7 @@ RUN mv ./src/config/auth.template.json src/config/auth.json && \
 
 RUN tsc
 
-RUN cp src/config/config.json dist/config/config.json&& \
+RUN cp src/config/config.json dist/config/config.json && \
     cp src/config/auth.json dist/config/auth.json
 
 FROM node:14-alpine AS build2
