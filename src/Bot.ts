@@ -21,6 +21,10 @@ export class Bot {
         this.bindEvents();
     }
 
+    public login(token: string): void {
+        this.client.login(token);
+    }
+
     private prepCommands(commands: Command[]) {
         const preppedCommands = new Map<string, Command>();
         for (const command of commands) {
@@ -185,9 +189,5 @@ export class Bot {
         
             await this.fetchOurRoles();
         });
-    }
-
-    login(token: string) {
-        this.client.login(token);
     }
 }
