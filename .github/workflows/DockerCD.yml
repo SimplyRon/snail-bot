@@ -32,8 +32,6 @@ jobs:
           context: .
           push: true
           tags: justapassenger/snail-bot:latest
-          build-args: |
-            Token=${{ secrets.BOT_TOKEN }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
