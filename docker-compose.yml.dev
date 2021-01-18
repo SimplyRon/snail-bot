@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+
+  bot:
+    image: justapassenger/snail-bot:develop #-debug
+    container_name: snail-bot-backend
+    restart: unless-stopped
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/
+    networks:
+      - shortcut
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12-alpine
+    container_name: snail-bot-db
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 5432
+      - "25000:5432"  # For windows users if can't connect to DataGrip.
+    volumes:
+      - pgsql-volume:/var/lib/postgresql/data:delegated
+    networks:
+      - shortcut
+
+volumes:
+  pgsql-volume:
+
+networks:
+  shortcut:
+    driver: bridge
