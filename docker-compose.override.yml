@@ -2,3 +2,5 @@ services:
   bot:
     build:
       context: .
+    volumes: 
+      - ./:/usr/snail-bot

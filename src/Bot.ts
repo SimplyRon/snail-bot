@@ -184,7 +184,7 @@ export class Bot {
 
     private ready() {
         this.client.on('ready', async () => {
-            console.info(`Succesfully logged in as ${this.client.user.tag}`);
+            console.info(`Successfully logged in as ${this.client.user.tag}`);
             this.client.user.setActivity("AS-Bot V1.0");
         
             await this.fetchOurRoles();
