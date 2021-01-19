@@ -2,7 +2,6 @@ version: "3.7"
 services:
 
   bot:
-    image: justapassenger/snail-bot:develop #-debug
     container_name: snail-bot-backend
     restart: unless-stopped
     tty: true

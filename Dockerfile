@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /usr/snail-bot
 
-COPY package.json .
+COPY package*.json ./
 RUN npm install -g typescript
 RUN npm install
 COPY . .
@@ -19,7 +19,7 @@ RUN cp src/config/config.json dist/config/config.json && \
 
 FROM node:14-alpine AS build2
 WORKDIR /usr/snail-bot
-COPY package.json ./
+COPY package*.json ./
 
 RUN npm install --production
 
@@ -27,8 +27,9 @@ COPY --from=build usr/snail-bot/dist ./dist
 
 FROM node:14-alpine
 WORKDIR /usr/snail-bot
-COPY package.json ./
+COPY package*.json ./
 
 COPY --from=build2 /usr/snail-bot ./
 
+USER node
 CMD ["node", "."]

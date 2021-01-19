@@ -1,16 +1,21 @@
 {
-  "name": "as-bot",
+  "name": "snail-bot",
   "version": "1.0.0",
-  "description": "a moderation and logging bot made for the shortcut discord server",
+  "description": "a moderation and logging bot made for the snail discord server",
   "main": "dist/index.js",
   "scripts": {
     "start_noinstall": "tsc && node .",
     "start_nobuild": "node install && node .",
     "start": "npm install && npm run lint && tsc && node .",
     "production": "npm install --only=production && node.",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "dev": "cross-conf-env docker-compose build --parallel && cross-conf-env docker-compose up --abort-on-container-exit --no-deps"
   },
   "author": "ElementalMP4",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SimplyRon/snail-bot.git"
+  },
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
@@ -24,6 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
     "eslint": "^7.15.0",
-    "eslint-formatter-github": "^1.0.11"
+    "eslint-formatter-github": "^1.0.11",
+    "cross-conf-env": "^1.2.1"
   }
 }
