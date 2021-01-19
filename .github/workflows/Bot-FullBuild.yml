@@ -24,7 +24,7 @@ jobs:
       run: npm ci
 
     - name: Set up dummy configs
-      run: cp src/config/auth.template.json src/config/auth.json && cp src/config/config.template.json src/config/config.json
+      run: cp src/config/config.template.json src/config/config.json
 
     - name: TypeScript Error Report
       uses: andoshin11/typescript-error-reporter-action@v1.0.2

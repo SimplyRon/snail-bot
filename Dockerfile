@@ -8,11 +8,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 
-RUN mv ./src/config/auth.template.json src/config/auth.json && \
-    mv ./src/config/config.template.json src/config/config.json && \
-    /usr/snail-bot/node_modules/typescript/bin/tsc -p /usr/snail-bot/tsconfig.json && \
-    cp src/config/config.json dist/config/config.json && \
-    cp src/config/auth.json dist/config/auth.json
+RUN /usr/snail-bot/node_modules/typescript/bin/tsc -p /usr/snail-bot/tsconfig.json
 
 FROM node:14-alpine
 WORKDIR /usr/snail-bot
