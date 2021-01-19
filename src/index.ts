@@ -9,7 +9,7 @@ const main = async () => {
 
         const bot = new Bot(commands, events);
         
-        const token: string = process.env['Token'] ?? (await require("./config/auth.json")).BotToken;
+        const token: string = process.env['Token'];
         bot.login(token);
     }
     catch(error) {
