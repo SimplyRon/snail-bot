@@ -1,29 +1,37 @@
 {
-  "name": "as-bot",
+  "name": "snail-bot",
   "version": "1.0.0",
-  "description": "a moderation and logging bot made for the shortcut discord server",
+  "description": "a moderation and logging bot made for the snail discord server",
   "main": "dist/index.js",
   "scripts": {
-    "start_noinstall": "tsc && node .",
-    "start_nobuild": "node install && node .",
     "start": "npm install && npm run lint && tsc && node .",
-    "production": "npm install --only=production && node.",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "dev": "concurrently --kill-others -n DB,Backend -c green,blue \"npm run dev:db\" \"npm run dev:backend\"",
+    "dev:backend": "tsc && cross-conf-env docker-compose up --build bot",
+    "dev:db": "cross-conf-env docker-compose up db",
+    "dev:watch": "concurrently --kill-others -n DB,Backend -c green,blue \"npm run dev:db\" \"nodemon --watch src -e ts,json --exec \\\"npm run dev:backend\\\"\""
   },
   "author": "ElementalMP4",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SimplyRon/snail-bot.git"
+  },
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
     "discord.js": "^12.5.1",
     "moment": "^2.29.1",
-    "mysql": "^2.18.1",
-    "typescript": "^4.1.3"
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
+    "typescript": "^4.1.3",
     "@types/node": "^14.14.13",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
+    "concurrently": "^5.3.0",
+    "cross-conf-env": "^1.2.1",
     "eslint": "^7.15.0",
-    "eslint-formatter-github": "^1.0.11"
+    "eslint-formatter-github": "^1.0.11",
+    "nodemon": "^2.0.7"
   }
 }

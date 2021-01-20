@@ -4,28 +4,19 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /usr/snail-bot
 
-COPY package.json .
-RUN npm install -g typescript
+COPY package*.json ./
 RUN npm install
 COPY . .
 
-RUN mv ./src/config/auth.template.json src/config/auth.json && \
-    mv ./src/config/config.template.json src/config/config.json
+RUN /usr/snail-bot/node_modules/typescript/bin/tsc -p /usr/snail-bot/tsconfig.json
 
-RUN tsc
-
-FROM node:14-alpine AS build2
+FROM node:14-alpine
 WORKDIR /usr/snail-bot
-COPY package.json ./
+COPY package*.json ./
 
 RUN npm install --production
 
 COPY --from=build usr/snail-bot/dist ./dist
 
-FROM node:14-alpine
-WORKDIR /usr/snail-bot
-COPY package.json ./
-
-COPY --from=build2 /usr/snail-bot ./
-
+USER node
 CMD ["node", "."]
