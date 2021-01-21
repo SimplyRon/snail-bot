@@ -1,3 +1,6 @@
 services:
   bot:
     image: justapassenger/snail-bot:latest
+    restart: always
+  db:
+    restart: always
