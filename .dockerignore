@@ -2,3 +2,8 @@ node_modules
 npm-debug.log
 dist
 .github
+.eslint*
+docker-compose.*
+Dockerfile
+README.md
+.env.template
