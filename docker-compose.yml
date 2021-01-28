@@ -11,6 +11,7 @@ services:
       - shortcut
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:12-alpine
@@ -25,6 +26,14 @@ services:
       - pgsql-volume:/var/lib/postgresql/data:delegated
     networks:
       - shortcut
+
+  redis:
+    image: "redis:alpine"
+    restart: unless-stopped
+    networks:
+      - shortcut
+    depends_on:
+      - db
 
 volumes:
   pgsql-volume:
