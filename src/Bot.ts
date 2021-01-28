@@ -2,17 +2,19 @@ import { Client, Message } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { Event } from "./interfaces/Event";
 import { prefix } from "./config/config.json";
+import { RedisClient } from "./utils/RedisClient";
+import { ClientOpts } from "redis";
 
 
 export class Bot {
 
     private prefix: string;
-    private client: Client;
+    private redisClient: RedisClient;
     private commands: Map<string, Command>;
     private events: Event[];
 
-    constructor(commands: Command[], events: Event[]) {
-        this.client = new Client();
+    constructor(commands: Command[], events: Event[], redisOptions: ClientOpts) {
+        this.redisClient = new RedisClient(new Client(), redisOptions);
         this.prefix = prefix;
         this.commands = this.prepCommands(commands);
         this.events = this.prepEvents(events);
@@ -22,7 +24,7 @@ export class Bot {
     }
 
     public login(token: string): void {
-        this.client.login(token);
+        this.redisClient.discordClient.login(token);
     }
 
     private prepCommands(commands: Command[]) {
@@ -71,7 +73,7 @@ export class Bot {
             }
             
             // pass the client to the event
-            event.setClient(this.client);
+            event.setClient(this.redisClient.discordClient);
             
             // add the event to the events array since it's a valid event
             preppedEvents.push(event);
@@ -110,13 +112,13 @@ export class Bot {
     }
 
     private bindCommands() {
-        this.client.on('message', (message) => {
+        this.redisClient.discordClient.on('message', (message) => {
             try {
                 if (message.author.bot) return;
                 if (message.content.startsWith(this.prefix)) {
                     const args = message.content.slice(this.prefix.length).trim().split(/ +/g);
                     const command = args.shift().toLowerCase()
-                    this.runCommand(command, message, args, this.client);
+                    this.runCommand(command, message, args, this.redisClient.discordClient);
                 }
             }
             catch(error)
@@ -131,7 +133,7 @@ export class Bot {
         for(const event of this.events) {
             try {
                 // binding callback to event (its class) to access `this` inside the callback method
-                this.client.on(event.name, event.callback.bind(event));
+                this.redisClient.discordClient.on(event.name, event.callback.bind(event));
             }
             catch(error) {
                 console.debug(`Error in event: [${event.name}]`);
@@ -143,9 +145,9 @@ export class Bot {
     private async fetchOurRoles() {
         // Since this is a proprietary bot, we only have one guild, so we can get away with this
     
-        const ourGuildId = this.client.guilds.cache.map(guild => guild.id)[0];
+        const ourGuildId = this.redisClient.discordClient.guilds.cache.map(guild => guild.id)[0];
         
-        const ourGuild = this.client.guilds.cache.get(ourGuildId);
+        const ourGuild = this.redisClient.discordClient.guilds.cache.get(ourGuildId);
     
         const ourRoles = new Set<string>();
 
@@ -183,9 +185,9 @@ export class Bot {
     }
 
     private ready() {
-        this.client.on('ready', async () => {
-            console.info(`Successfully logged in as ${this.client.user.tag}`);
-            this.client.user.setActivity("AS-Bot V1.0");
+        this.redisClient.discordClient.on('ready', async () => {
+            console.info(`Successfully logged in as ${this.redisClient.discordClient.user.tag}`);
+            this.redisClient.discordClient.user.setActivity("Snail-Bot V0.5");
         
             await this.fetchOurRoles();
         });
