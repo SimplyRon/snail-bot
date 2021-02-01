@@ -2,7 +2,6 @@ version: "3.7"
 services:
 
   bot:
-    container_name: snail-bot-backend
     restart: unless-stopped
     tty: true
     env_file:
@@ -15,7 +14,6 @@ services:
 
   db:
     image: postgres:12-alpine
-    container_name: snail-bot-db
     restart: unless-stopped
     env_file:
       - .env
@@ -28,15 +26,28 @@ services:
       - shortcut
 
   redis:
-    image: "redis:alpine"
+    image: redis:alpine
     restart: unless-stopped
+    volumes:
+      - redis-volume:/data
+    networks:
+      - shortcut
+
+  workercheck:
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - WORKER=workerCheck
     networks:
       - shortcut
     depends_on:
       - db
+      - redis
 
 volumes:
   pgsql-volume:
+  redis-volume:
 
 networks:
   shortcut:

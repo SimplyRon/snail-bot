@@ -1,7 +1,6 @@
 import { Client } from "discord.js";
 
-export interface Event {
-    setClient: (client: Client) => void;
+export abstract class Event {
     name: string;
-    callback: (...args: any[]) => void;
+    abstract callback (client: Client, ...args: any[]): Promise<void>;
 }

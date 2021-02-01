@@ -1,7 +1,7 @@
-import { Message } from "discord.js";
+import { Client, Message } from "discord.js";
 import { Command } from "../interfaces/Command";
 
-export class SayCommand implements Command {
+export class SayCommand extends Command {
 
     public name = 'say';
 
@@ -19,11 +19,11 @@ export class SayCommand implements Command {
 
     public requiresArgs = true;
 
-    public async execute(msg: Message, args: string[]) {
+    public async execute(client: Client, msg: Message, args: string[]): Promise<void> {
         let strToSend = ""
-        args.forEach((element: any) => {
+        args.forEach((element: unknown) => {
             strToSend += ` ${element}`;
         });
-        msg.channel.send(strToSend);
+        await msg.channel.send(strToSend);
     }
 }

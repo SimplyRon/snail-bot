@@ -1,13 +1,13 @@
 import { Client, Message } from "discord.js";
 
-export interface Command {
-    name: string,
-    description: string,
-    usage: string,
-    requiredRoles: string[],
-    forbiddenRoles?: string[],
-    deleteAfter?: boolean,
-    deleteAfterTime?: number,
-    requiresArgs: boolean,
-    execute: (message: Message, args: string[], client: Client) => void
+export abstract class Command {
+    name: string;
+    description: string;
+    usage: string;
+    requiredRoles: string[];
+    forbiddenRoles?: string[];
+    deleteAfter?: boolean;
+    deleteAfterTime?: number;
+    requiresArgs: boolean;
+    abstract execute(client: Client, message: Message, args: string[]): Promise<void>;
 }

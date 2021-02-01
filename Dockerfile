@@ -7,8 +7,8 @@ RUN npm install --production --no-fund --no-optional --no-audit --ignore-scripts
 
 RUN VERSION_TS=`node -p -e "require('./package.json').devDependencies.typescript"` \
  && VERSION_NTS=`node -p -e "require('./package.json').devDependencies[\"@types/node\"]"` \
- && VERSION_RTS=`node -p -e "require('./package.json').devDependencies[\"@types/redis\"]"` \
- && npm install --no-package-lock --no-save typescript@"$VERSION_TS" @types/node@"$VERSION_NTS" @types/redis@"$VERSION_RTS"
+ && VERSION_RTS=`node -p -e "require('./package.json').devDependencies[\"@types/ioredis\"]"` \
+ && npm install --no-package-lock --no-save typescript@"$VERSION_TS" @types/node@"$VERSION_NTS" @types/ioredis@"$VERSION_RTS"
 
 COPY . .
 RUN /usr/snail-bot/node_modules/typescript/bin/tsc -p /usr/snail-bot/tsconfig.json
