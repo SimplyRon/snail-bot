@@ -1,7 +1,7 @@
 import { Client, Message, MessageEmbed } from 'discord.js';
 import { Command } from '../interfaces/Command';
 
-export class PingCommand implements Command {
+export class PingCommand extends Command {
 
     public name = "ping";
 
@@ -15,17 +15,17 @@ export class PingCommand implements Command {
 
     public requiresArgs = false;
 
-    public async execute(msg: Message, _, client: Client) {
+    public async execute(client: Client, msg: Message): Promise<void> {
         const color = "#fefefe";
         const ping = Math.round(client.ws.ping);
         const original = new MessageEmbed()
             .setTitle("Ping Statistics")
             .addField("API Ping", ping + "ms")
             .setColor(color);
-        let dBefore = new Date();
+        const dBefore = new Date();
         const start = dBefore.getTime();
         const sentMessage = await msg.channel.send(original)
-        let dAfter = new Date();
+        const dAfter = new Date();
         const end = dAfter.getTime();
         const res = end - start;
         const updated = new MessageEmbed()
@@ -33,6 +33,6 @@ export class PingCommand implements Command {
             .addField("API Ping", ping + "ms")
             .addField("Client Ping", res + "ms")
             .setColor(color);
-        sentMessage.edit(updated);
+        await sentMessage.edit(updated);
     }
 }

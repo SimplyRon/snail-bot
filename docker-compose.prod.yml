@@ -6,3 +6,5 @@ services:
     restart: always
   redis:
     restart: always
+  workercheck:
+    restart: always

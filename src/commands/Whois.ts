@@ -1,8 +1,8 @@
-import { MessageEmbed, User, Message } from "discord.js";
+import { MessageEmbed, User, Message, Client } from "discord.js";
 import moment = require("moment");
 import { Command } from "../interfaces/Command";
 
-export class WhoisCommand implements Command {
+export class WhoisCommand extends Command {
 
     public name = 'whois';
 
@@ -16,10 +16,10 @@ export class WhoisCommand implements Command {
 
     public requiresArgs = false;
 
-    public async execute(msg: Message, args: string[]) {
+    public async execute(client: Client, msg: Message, args: string[]): Promise<void> {
         const color = "#fefefe"
         if (msg.channel.type === "dm") {
-            return msg.channel.send("This is a guild-only command");
+            await msg.channel.send("This is a guild-only command");
         }
         let user: User;
         if (!args[0]) {
@@ -42,6 +42,6 @@ export class WhoisCommand implements Command {
             .addField("💥 Account Created On:", `${moment.utc(user.createdAt).format("dddd, MMMM Do YYYY")}`, true)
             .addField("📋 Roles:", roles, false)
             .addField("🆔 ID:", `${user.id}`, false)
-        msg.channel.send(embed)
+        await msg.channel.send(embed)
     }
 }

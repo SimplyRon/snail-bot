@@ -1,116 +1,51 @@
-import { ClientOpts, Multi, RedisClient } from 'redis';
-import * as redis from 'redis';
-import * as tsubaki from 'tsubaki';
-import { Channel, Client, Emoji, Guild, GuildMember, Message, PartialMessage, User } from 'discord.js';
+import * as RedisModule from 'ioredis';
+import { MultiOptions, Pipeline, Redis } from 'ioredis';
+import { RedisOptions } from 'bullmq';
+import { Snowflake } from 'discord.js';
 
-tsubaki.promisifyAll(redis.RedisClient.prototype);
-tsubaki.promisifyAll(redis.Multi.prototype);
-
-interface PromisifiedMulti extends Multi {
-    execAsync(): Promise<unknown[]>;
-    sremAsync: PromisifiedOverloadedKeyCommand<string, number>;
-}
-
-export interface PromisifiedOverloadedKeyCommand<T, U> {
-    (key: string, ...args: Array<T | T[]>): Promise<U>;
-    (...args: Array<string | T>): Promise<U>;
-}
-
-export interface PromisifiedRedisClient extends RedisClient {
-    multi(): PromisifiedMulti;
-    saddAsync : PromisifiedOverloadedKeyCommand<string, number>;
-    sremAsync: PromisifiedOverloadedKeyCommand<string, number>;
-    sismemberAsync(key: string, member: string): Promise<number>;
-    publishAsync(channel: string, value:string): Promise<number>
-    flushallAsync(): Promise<string>;
+export interface RedisResult {
+    results: unknown[];
+    errors: Error[];
 }
 
 export class RedisInterface {
+    private static instance: RedisInterface;
 
-    public client: PromisifiedRedisClient;
+    private client: Redis;
 
-    constructor(options: ClientOpts) {
-        this.client = <PromisifiedRedisClient>redis.createClient(options);
+    private constructor(options: RedisOptions) {
+        this.client = new RedisModule(options);
     }
 
-    public async init(client: Client): Promise<unknown[]> {
-        const q = this.client.multi();
-
-        client.users.cache.forEach(u => q.sadd('users', u.id));
-        client.guilds.cache.forEach(g => q.sadd('guilds', g.id));
-        client.emojis.cache.forEach(e => q.sadd('emojis', e.id));
-        client.channels.cache.forEach(c => q.sadd('channels', c.id));
-
-        await this.client.flushallAsync();
-        return await q.execAsync();
+    public static init(options: RedisOptions): void {
+        RedisInterface.instance = new RedisInterface(options);
     }
 
-    public async addMember(member: GuildMember): Promise<[added: boolean, published: number]> {
-        const is = await this.client.sismemberAsync('users', member.id);
-        if (is)
-            return Promise.resolve([true, -1]);
-        return await this.addUser(member.user);
+    public static multi(commands?: string[][], options?: MultiOptions): Pipeline {
+        return RedisInterface.instance.client.multi(commands, options);
     }
 
-    public addChannel(channel: Channel) : Promise<[added: boolean, published: number]> {
-        return this._addData('channels', channel.id);
+    public static async setData(type: string, id: Snowflake, payload: unknown): Promise<RedisResult> {
+        const result = await RedisInterface.instance.client.multi()
+            .hset(type, id, JSON.stringify(RedisInterface.clean(payload)))
+            .publish(`${type}:Set`, id)
+            .exec();
+        return { results: result.map(i => i[1]), errors: result.map(i => i[0]) };
     }
 
-    public removeChannel(channel: Channel): Promise<[removed: boolean, published: number]> {
-        return this._removeData('channels', channel.id);
+    public static getData<T>(type: string, id: Snowflake): Promise<T> {
+        return RedisInterface.instance.client.hget(type, id).then(JSON.parse);
     }
 
-    public addUser(user: User) : Promise<[added: boolean, published: number]> {
-        return this._addData('users', user.id);
+    public static async removeData(type: string, id: Snowflake): Promise<RedisResult> {
+        const result = await RedisInterface.instance.client.multi()
+            .hdel(type, id)
+            .publish(`${type}:Del`, id)
+            .exec();
+        return { results: result.map(i => i[1]), errors: result.map(i => i[0]) };
     }
 
-    public removeUser(user: User): Promise<[removed: boolean, published: number]> {
-        return this._removeData('users', user.id);
-    }
-
-    public addGuild(guild: Guild): Promise<[added: boolean, published: number]> {
-        return this._addData('guilds', guild.id);
-    }
-
-    public removeGuild(guild: Guild): Promise<[removed: boolean, published: number]> {
-        return this._removeData('guilds', guild.id);
-    }
-
-    public addEmoji(emoji: Emoji): Promise<[added: boolean, published: number]> {
-        return this._addData('emojis', emoji.id);
-    }
-
-    public removeEmoji(emoji: Emoji): Promise<[removed: boolean, published: number]> {
-        return this._removeData('emojis', emoji.id);
-    }
-
-    public async addMessage(message: Message): Promise<[added: boolean, published: number]> {
-        const res = await this._addData('messages', `${message.channel.id}:${message.id}`);
-        const cache = message.client.options.messageCacheLifetime;
-        if (cache)
-            setTimeout(() => this.removeMessage(message), cache);
-        return res;
-    }
-
-    public removeMessage(message: Message | PartialMessage): Promise<[removed: boolean, published: number]> {
-        return this._removeData('messages', `${message.channel.id}:${message.id}`);
-    }
-
-    private _addData(type: string, id: string): Promise<[added: boolean, published: number]> {
-        return Promise.all([
-            this.client.saddAsync(type, id).then(c => c > 0),
-            this.client.publishAsync(`${type}Add`, id),
-        ]);
-    }
-
-    private _removeData(type: string, id: string): Promise<[removed: boolean, published: number]> {
-        return Promise.all([
-            this.client.sremAsync(type, id).then(c => c > 0),
-            this.client.publishAsync(`${type}Remove`, id),
-        ]);
-    }
-
-    public static clean(obj: { [key: string]: unknown }): { [key: string]: string } {
+    private static clean(obj: unknown): { [key: string]: string } {
         const out = {};
         Object.keys(obj).forEach(key => {
             if (!(obj[key] instanceof Object) && obj[key] !== null && typeof obj[key] !== 'undefined') out[key] = `${obj[key]}`;
