@@ -7,7 +7,7 @@ export class CheckWorker extends Worker<string, string> {
         super(WorkerType.workerCheck);
     }
 
-    protected async processJob(job: Job<string, string, string>): Promise<string> {
+    protected async processJob(job: Job<string, string>): Promise<string> {
         console.log("Worker checked");
         return 'true';
     }

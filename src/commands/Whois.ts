@@ -24,7 +24,8 @@ export class WhoisCommand extends Command {
         let user: User;
         if (!args[0]) {
             user = msg.author;
-        } else {
+        }
+        else {
             user = msg.mentions.users.first();
         }
         const member = msg.guild.member(user);

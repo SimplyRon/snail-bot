@@ -21,11 +21,11 @@ export class Bot {
         this.bindEvents();
     }
 
-    public login(token: string): void {
-        this.client.login(token);
+    public async login(token: string): Promise<void> {
+        return void await this.client.login(token);
     }
 
-    private prepCommands(commands: Command[]) {
+    private prepCommands(commands: Command[]): Map<string, Command> {
         const preppedCommands = new Map<string, Command>();
         for (const command of commands) {
 
@@ -54,7 +54,7 @@ export class Bot {
         return preppedCommands;
     }
 
-    private prepEvents(events: Event[]) {
+    private prepEvents(events: Event[]): Event[] {
         const preppedEvents = new Array<Event>();
         for (const event of events) {
 
@@ -77,7 +77,7 @@ export class Bot {
         return preppedEvents;
     }
     
-    private checkForPermissions(message: Message, cmd: Command) {
+    private checkForPermissions(message: Message, cmd: Command): boolean {
         const inRequiredRoles = !cmd.requiredRoles || message.member.roles.cache.find(r => cmd.requiredRoles.includes(r.name));
         const inForbiddenRoles = cmd.forbiddenRoles && message.member.roles.cache.find(r => cmd.forbiddenRoles.includes(r.name));
         return inRequiredRoles && !inForbiddenRoles;
@@ -106,7 +106,7 @@ export class Bot {
         await command.execute(client, message, args);
     }
 
-    private bindCommands() {
+    private bindCommands(): void {
         this.client.on('message', async message => {
             try {
                 if (message.author.bot) return;
@@ -116,15 +116,14 @@ export class Bot {
                     await this.runCommand(command, message, args, this.client);
                 }
             }
-            catch(error)
-            {
+            catch(error) {
                 console.debug(`Error while receiving message/executing command`);
                 console.error(error);
             }
         });
     }
 
-    private bindEvents() {
+    private bindEvents(): void {
         for (const event of this.events) {
             try {
                 // binding callback to event (its class) to access `this` inside the callback method
@@ -145,7 +144,7 @@ export class Bot {
         }
     }
 
-    private async fetchOurRoles() {
+    private async fetchOurRoles(): Promise<void> {
         // Since this is a proprietary bot, we only have one guild, so we can get away with this
     
         const ourGuildId = this.client.guilds.cache.map(guild => guild.id)[0];
@@ -187,10 +186,10 @@ export class Bot {
     
     }
 
-    private ready() {
+    private ready(): void {
         this.client.on('ready', async () => {
             console.info(`Successfully logged in as ${this.client.user.tag}`);
-            this.client.user.setActivity("Snail-Bot V0.5");
+            await this.client.user.setActivity("Snail-Bot V0.5");
         
             await this.fetchOurRoles();
         });

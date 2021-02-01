@@ -4,7 +4,7 @@ import { WorkerType } from "./interfaces/Worker";
 import { importCommands, importEvents, importWorkers } from "./utils/importModules";
 import { RedisInterface } from "./utils/RedisInterface";
 
-const startBot = async (redisOptions: RedisOptions) => {
+const startBot = async (redisOptions: RedisOptions): Promise<void> => {
     try {
         const commands = await importCommands().then(arr => arr.map(c => new c()));
         const events = await importEvents().then(arr => arr.map(e => new e()));
@@ -14,7 +14,7 @@ const startBot = async (redisOptions: RedisOptions) => {
         const bot = new Bot(commands, events);
         
         const token: string = process.env['Token'];
-        bot.login(token);
+        await bot.login(token);
     }
     catch(error) {
         console.debug("Error starting the bot");
@@ -22,7 +22,7 @@ const startBot = async (redisOptions: RedisOptions) => {
     }
 }
 
-const startWorker = async (type: string, redisOptions: RedisOptions) => {
+const startWorker = async (type: string, redisOptions: RedisOptions): Promise<void> => {
     const workerType = type as keyof typeof WorkerType;
     const workers = await importWorkers();
     
@@ -41,7 +41,7 @@ const startWorker = async (type: string, redisOptions: RedisOptions) => {
 }
 
 // async main function will be needed later for when we add TypeORM
-const main = async () => {
+const main = async (): Promise<void> => {
     const redisOptions: RedisOptions = {
         host: process.env['REDIS_HOST'],
         port: +process.env['REDIS_PORT']
@@ -51,9 +51,10 @@ const main = async () => {
 
     if (process.env["WORKER"]) {
         await startWorker(process.env["WORKER"], redisOptions);
-    } else {
+    }
+    else {
         await startBot(redisOptions);
     }
 }
 
-main();
+void main();

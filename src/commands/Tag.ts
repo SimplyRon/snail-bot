@@ -17,7 +17,7 @@ export class TagCommand extends Command {
     public requiresArgs = true;
 
     public async execute(client: Client, msg: Message, args: string[]): Promise<void> {
-        const ruleNum = args[0];
+        const ruleNum = +args[0];
         const channel = client.channels.cache.get(ruleChannelId);
         if (channel.isText()) {
             const message = await channel.messages.fetch(ruleMessageId)

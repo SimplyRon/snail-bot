@@ -3,6 +3,7 @@ import IORedis = require("ioredis");
 
 export const enum WorkerType {
     workerCheck = 'workerCheck',
+    smth = 'smth'
     // 
 }
 
@@ -10,8 +11,8 @@ export abstract class Worker<Input, Output> {
     private static queues: Map<WorkerType, Queue> = new Map<WorkerType, Queue>();
 
     public static async queueUp<Input, Output>(type: WorkerType, jobData: Input): Promise<Output> {
-        const queue = <Queue<Input, Output, string>> this.queues.get(type);
-        const job = <Job<Input, Output, string>> await queue.add(queue.name, jobData);
+        const queue = <Queue<Input, Output>> this.queues.get(type);
+        const job = <Job<Input, Output>> await queue.add(queue.name, jobData);
         return job.returnvalue;
     }
 
@@ -48,10 +49,14 @@ export abstract class Worker<Input, Output> {
             } 
             }));
         }
-        this.queue = Worker.queues.get(this._type);
+        const queue = Worker.queues.get(this._type)
+        if (queue === undefined) {
+            throw ReferenceError("Queue is null - what happened?");
+        }
+        this.queue = queue;
         this.worker = new BullMqWorker(this._type, async job => await this.processJob(job), { connection });
         console.debug(`Worker for ${this._type} started`);
     }
 
-    protected abstract processJob(job: Job<Input, Output, string>): Promise<Output>;
+    protected abstract processJob(job: Job<Input, Output>): Promise<Output>;
 }

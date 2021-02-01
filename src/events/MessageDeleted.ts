@@ -19,7 +19,8 @@ export class MessageDeletedEvent extends Event {
                 .addField("Attachments:", attachments)
                 .addField("Author:", message.author.tag)
                 .setThumbnail(message.member.user.avatarURL() ?? "");
-        } else {
+        }
+        else {
             embed = new MessageEmbed()
                 .setColor("#ff0000")
                 .setTitle("Message Deleted")
