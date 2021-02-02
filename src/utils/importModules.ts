@@ -8,18 +8,23 @@ interface InterfaceType<T> {
     new(): T;
 }
 
+interface Prototypable {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    prototype: object;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isCommand(modulePart: any): modulePart is InterfaceType<Command> {
+function isCommand(modulePart: Prototypable): modulePart is InterfaceType<Command> {
     return Object.create(modulePart.prototype) instanceof Command;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isEvent(modulePart: any): modulePart is InterfaceType<BotEvent> {
+function isEvent(modulePart: Prototypable): modulePart is InterfaceType<BotEvent> {
     return Object.create(modulePart.prototype) instanceof BotEvent;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function isWorker(modulePart: any): modulePart is InterfaceType<Worker<unknown, unknown>> {
+function isWorker(modulePart: Prototypable): modulePart is InterfaceType<Worker<unknown, unknown>> {
     return Object.create(modulePart.prototype) instanceof Worker;
 }
 
@@ -29,8 +34,13 @@ enum ModuleType {
     Workers = 'workers'
 }
 
+type ModulePart = InterfaceType<Command | BotEvent | Worker<unknown, unknown>>;
+interface ModuleContainer {
+    [key: string]: ModulePart;
+}
+
 interface ModuleDeclaration {
-    module: InterfaceType<Command | BotEvent | Worker<unknown, unknown>>;
+    module: ModulePart;
     fileName: string
 }
 
@@ -43,7 +53,7 @@ const importModules = async (folder: ModuleType): Promise<ModuleDeclaration[]> =
         if (!extension) continue;
         if (extension !== "js" && extension !== "ts") continue;
         const importString = path.join('..', folder, fileName);
-        const module = await require(importString);
+        const module = <ModuleContainer>(await require(importString));
         for (const key in module) {
             modules.push({ module: module[key], fileName });
         }

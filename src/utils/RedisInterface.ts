@@ -5,7 +5,7 @@ import { Snowflake } from 'discord.js';
 
 export interface RedisResult {
     results: unknown[];
-    errors: Error[];
+    errors: (Error | null)[];
 }
 
 export class RedisInterface {
@@ -33,8 +33,8 @@ export class RedisInterface {
         return { results: result.map(i => i[1]), errors: result.map(i => i[0]) };
     }
 
-    public static getData<T>(type: string, id: Snowflake): Promise<T> {
-        return RedisInterface.instance.client.hget(type, id).then(JSON.parse);
+    public static async getData<T>(type: string, id: Snowflake): Promise<T> {
+        return RedisInterface.instance.client.hget(type, id).then(s => s ? JSON.parse(s) : null);
     }
 
     public static async removeData(type: string, id: Snowflake): Promise<RedisResult> {
@@ -45,7 +45,8 @@ export class RedisInterface {
         return { results: result.map(i => i[1]), errors: result.map(i => i[0]) };
     }
 
-    private static clean(obj: unknown): { [key: string]: string } {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private static clean(obj: any): { [key: string]: string } {
         const out = {};
         Object.keys(obj).forEach(key => {
             if (!(obj[key] instanceof Object) && obj[key] !== null && typeof obj[key] !== 'undefined') out[key] = `${obj[key]}`;
